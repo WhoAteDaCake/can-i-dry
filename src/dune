@@ -4,4 +4,4 @@
 (executable
   (name rserver)
   (public_name rserver)
-  (libraries core cohttp lwt))
+  (libraries core cohttp cohttp-lwt-unix lwt))
