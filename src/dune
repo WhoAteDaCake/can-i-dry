@@ -4,4 +4,4 @@
 (executable
   (name rserver)
   (public_name rserver)
-  (libraries Belt opium core cohttp))
+  (libraries core cohttp lwt))
