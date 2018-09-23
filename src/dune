@@ -1,0 +1,7 @@
+(include_subdirs unqualified)
+(ignored_subdirs (node_modules))
+
+(executable
+  (name rserver)
+  (public_name rserver)
+  (libraries Belt opium core cohttp))
