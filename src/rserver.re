@@ -10,9 +10,16 @@ let build_url = () =>
 let body =
   build_url()
   |> Client.get
-  >>= (((_resp, body)) => body |> Cohttp_lwt.Body.to_string);
+  >>= (((_resp, body)) => Cohttp_lwt.Body.to_string(body))
+  >|= (
+    str =>
+      str |> Ezjsonm.from_string |> Ezjsonm.value |> Parser.extract_forecasts
+  );
 
-let () = {
-  let resp = Lwt_main.run(body);
-  print_endline("Received body\n" ++ resp);
-};
+let () =
+  Lwt_main.run(
+    body,
+    /* let resp = Lwt_main.run(body);
+       print_endline("Received body\n" ++ resp); */
+  )
+  |> ignore;

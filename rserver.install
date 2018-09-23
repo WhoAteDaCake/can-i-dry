@@ -1,0 +1,10 @@
+lib: [
+  "/home/august/open-source/my-repos/weather-scrapper/node_modules/.cache/_esy/store/b/rsever-1.0.0-ebbf64c0/install/default/lib/rserver/META" {"META"}
+  "/home/august/open-source/my-repos/weather-scrapper/node_modules/.cache/_esy/store/b/rsever-1.0.0-ebbf64c0/install/default/lib/rserver/opam" {"opam"}
+]
+bin: [
+  "/home/august/open-source/my-repos/weather-scrapper/node_modules/.cache/_esy/store/b/rsever-1.0.0-ebbf64c0/install/default/bin/rserver" {"rserver"}
+]
+doc: [
+  "/home/august/open-source/my-repos/weather-scrapper/node_modules/.cache/_esy/store/b/rsever-1.0.0-ebbf64c0/install/default/doc/rserver/README.md"
+]
