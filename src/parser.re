@@ -14,20 +14,6 @@ type forecast = {
   weather,
 };
 
-let get_or_default = (json, path, default) =>
-  if (Ezjsonm.mem(json, path)) {
-    Ezjsonm.find(json, path);
-  } else {
-    default;
-  };
-
-let get_opt = (json, path) =>
-  if (Ezjsonm.mem(json, path)) {
-    Some(Ezjsonm.find(json, path));
-  } else {
-    None;
-  };
-
 let to_milisecond = n => n * 1000;
 
 let weather_from_json = json =>
