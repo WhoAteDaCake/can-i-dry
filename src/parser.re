@@ -14,6 +14,13 @@ type forecast = {
   weather,
 };
 
+type stats = {
+  date: string,
+  temp: float,
+  rain_mm: float,
+  rain_status: string,
+};
+
 let to_milisecond = n => n * 1000;
 
 let get_or_else = (json, path, default) =>
