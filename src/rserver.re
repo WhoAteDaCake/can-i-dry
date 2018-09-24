@@ -9,8 +9,15 @@ let get_forecast =
     >|= (
       forecast =>
         forecast
-        |> Parser.format_forecasts
-        |> (json => `Json(json) |> Server.respond)
+        |> (
+          fs =>
+            {
+              let list = Utils.group_by_day(fs);
+              list
+            }
+            |> Parser.format_grouped_forecasts
+            |> (json => `Json(json) |> Server.respond)
+        )
     )
   );
 

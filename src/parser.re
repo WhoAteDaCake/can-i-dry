@@ -78,3 +78,5 @@ let forecast_to_json = forecast =>
   );
 
 let format_forecasts = Ezjsonm.list(forecast_to_json);
+
+let format_grouped_forecasts = Ezjsonm.list(format_forecasts);
