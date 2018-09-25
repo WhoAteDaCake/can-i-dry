@@ -60,7 +60,9 @@ let forecast_from_json = json =>
     time: find(json, ["dt"]) |> get_int |> to_milisecond,
     date: find(json, ["dt_txt"]) |> get_string,
     temp: json |> get_temp |> Option.value_exn(_),
-    rain_precipitation: json |> get_rain,
+    /* Divide by 3 because it gives rain in last 3h period */
+    rain_precipitation:
+      json |> get_rain |> (mm => Option.(mm >>| (n => n /. 3.0))),
     weather: json |> get_weather,
   };
 
@@ -87,3 +89,15 @@ let forecast_to_json = forecast =>
 let format_forecasts = Ezjsonm.list(forecast_to_json);
 
 let format_grouped_forecasts = Ezjsonm.list(format_forecasts);
+
+let stat_to_json = stat =>
+  Ezjsonm.(
+    dict([
+      ("date", stat.date |> string),
+      ("temp", stat.temp |> float),
+      ("rain_mm", stat.rain_mm |> float),
+      ("rain_status", stat.rain_status |> string),
+    ])
+  );
+
+let format_stats = Ezjsonm.list(stat_to_json);

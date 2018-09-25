@@ -10,7 +10,7 @@ let get_forecast =
       data =>
         data
         |> Forecast.analyse
-        |> Parser.format_grouped_forecasts
+        |> Parser.format_stats
         |> (json => `Json(json) |> Server.respond)
     )
   );
