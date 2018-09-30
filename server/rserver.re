@@ -1,18 +1,59 @@
-open Lwt.Infix;
+Netsmtp_custom.Debug.enable := true;
 
-module Server = Opium.Std;
-module App = Server.App;
+Nettls_gnutls.init() |> ignore;
 
-let get_forecast =
-  Server.get("/forecast", _req =>
-    Client.request_forcast()
-    >|= (
-      data =>
-        data
-        |> Forecast.analyse
-        |> Parser.format_stats
-        |> (json => `Json(json) |> Server.respond)
-    )
+let timeout = 60.0;
+let domain = "smtp.gmail.com";
+let port = 587;
+let provider = Netsys_crypto.current_tls();
+
+let addr =
+  `Socket((
+    `Sock_inet_byname((Unix.SOCK_STREAM, domain, port)),
+    Uq_client.default_connect_options,
+  ));
+
+let tc =
+  Netsys_tls.create_x509_config(
+    ~peer_auth=`None,
+    ~system_trust=true,
+    provider,
   );
 
-let _ = App.empty |> get_forecast |> App.run_command;
+let c = (new Netsmtp_custom.connect)(addr, timeout);
+c#helo();
+c#starttls(tc, ~peer_name=Some(domain));
+
+module Netmech_custom = {
+  include Netmech_digest_sasl.DIGEST_MD5;
+  /* let mechanism_name = "DIGEST-MD5"; */
+  let mechanism_name = "PLAIN";
+};
+
+c#auth(
+  (module Netmech_custom),
+  Config.emailUser,
+  "",
+  [("password", Config.emailPass, [])],
+  [("digest-uri", "smtp/smtp", true)],
+);
+
+/* c#auth(
+     (module Netmech_digest_sasl.DIGEST_MD5),
+     Config.emailUser,
+     "LOGIN",
+     [("password", Config.emailPass, [])],
+     [("digest-uri", "smtp/smtp", true)],
+   ); */
+/*
+
+ let tls = Netsys_crypto.current_tls();
+ let tc = Netsys_tls.create_x509_config(~trust:[`PEM_file "/etc/ssl/certs/ca-certificates.crt" ] ~peer_auth:`None tls;;
+ let c  = new Netsmtp.connect addr 300.0;;
+ c#helo();;
+ c#starttls tc;;
+ c # auth (module Netmech_digestmd5_sasl.DIGEST_MD5) "gerd" "" [ "password", "secret", [] ] [ "digest-uri", "smtp/smtp", true];;
+
+
+ Netsmtp.authenticate ~tls_config:tc ~sasl_mechs:[ (module Netmech_digestmd5_sasl.DIGEST_MD5); (module Netmech_crammd5_sasl.CRAM_MD5) ] ~user:"gerd" ~creds:["password", "secret", []] c ;;
+  */
