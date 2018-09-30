@@ -96,3 +96,5 @@ self # smtp_cmd full_command;
 However now
 > Auth error: unexpected 235 
 Is thrown. This could probably be because I've manually injected the command without passing trough the digest module
+
+Wel... Turns out I just needed to use `(module Netmech_plain_sasl.PLAIN)` instead of digest one...

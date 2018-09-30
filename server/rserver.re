@@ -1,4 +1,4 @@
-Netsmtp_custom.Debug.enable := true;
+Netsmtp.Debug.enable := true;
 
 Nettls_gnutls.init() |> ignore;
 
@@ -20,22 +20,16 @@ let tc =
     provider,
   );
 
-let c = (new Netsmtp_custom.connect)(addr, timeout);
+let c = (new Netsmtp.connect)(addr, timeout);
 c#helo();
 c#starttls(tc, ~peer_name=Some(domain));
 
-module Netmech_custom = {
-  include Netmech_digest_sasl.DIGEST_MD5;
-  /* let mechanism_name = "DIGEST-MD5"; */
-  let mechanism_name = "PLAIN";
-};
-
 c#auth(
-  (module Netmech_custom),
+  (module Netmech_plain_sasl.PLAIN),
   Config.emailUser,
   "",
   [("password", Config.emailPass, [])],
-  [("digest-uri", "smtp/smtp", true)],
+  [],
 );
 
 /* c#auth(
