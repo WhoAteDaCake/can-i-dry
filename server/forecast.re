@@ -52,5 +52,4 @@ let get_stats = (day: list(Parser.forecast)) : Parser.stats => {
 let analyse = list => {
   let result = group_by_day(list);
   List.map(result, ~f=get_stats);
-  /* result; */
 };

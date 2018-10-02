@@ -4,4 +4,4 @@
 (executable
   (name rserver)
   (public_name rserver)
-  (libraries core cohttp cohttp-lwt-unix lwt ezjsonm opium duration netclient equeue netsys nettls-gnutls netstring))
+  (libraries core cohttp cohttp-lwt-unix lwt ezjsonm netclient equeue netsys nettls-gnutls netstring))
